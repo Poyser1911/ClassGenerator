@@ -71,8 +71,8 @@ namespace JavaClassGenerator
             if (attrlist.SelectedIndex < 0)
                 return;
 
-            attrlist.Items.RemoveAt(attrlist.SelectedIndex);
             attributelist.RemoveAt(attrlist.SelectedIndex);
+            attrlist.Items.RemoveAt(attrlist.SelectedIndex);
 
             Update();
         }
