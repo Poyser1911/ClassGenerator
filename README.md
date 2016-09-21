@@ -19,4 +19,4 @@
 
 
 Preview Image -
-![Alt text](/BCT/preview.png?raw=true "Preview")
+![Alt text](/JavaClassGenerator/preview.png?raw=true "Preview")
