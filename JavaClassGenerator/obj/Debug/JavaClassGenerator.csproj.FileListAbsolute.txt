@@ -1,0 +1,13 @@
+C:\Users\Poyser\Documents\webapp\JavaClassGenerator\JavaClassGenerator\bin\Debug\JavaClassGenerator.exe.config
+C:\Users\Poyser\Documents\webapp\JavaClassGenerator\JavaClassGenerator\bin\Debug\JavaClassGenerator.exe
+C:\Users\Poyser\Documents\webapp\JavaClassGenerator\JavaClassGenerator\bin\Debug\JavaClassGenerator.pdb
+C:\Users\Poyser\Documents\webapp\JavaClassGenerator\JavaClassGenerator\obj\Debug\JavaClassGenerator.csprojResolveAssemblyReference.cache
+C:\Users\Poyser\Documents\webapp\JavaClassGenerator\JavaClassGenerator\obj\Debug\MainWindow.baml
+C:\Users\Poyser\Documents\webapp\JavaClassGenerator\JavaClassGenerator\obj\Debug\MainWindow.g.cs
+C:\Users\Poyser\Documents\webapp\JavaClassGenerator\JavaClassGenerator\obj\Debug\App.g.cs
+C:\Users\Poyser\Documents\webapp\JavaClassGenerator\JavaClassGenerator\obj\Debug\JavaClassGenerator_MarkupCompile.cache
+C:\Users\Poyser\Documents\webapp\JavaClassGenerator\JavaClassGenerator\obj\Debug\JavaClassGenerator.g.resources
+C:\Users\Poyser\Documents\webapp\JavaClassGenerator\JavaClassGenerator\obj\Debug\JavaClassGenerator.Properties.Resources.resources
+C:\Users\Poyser\Documents\webapp\JavaClassGenerator\JavaClassGenerator\obj\Debug\JavaClassGenerator.csproj.GenerateResource.Cache
+C:\Users\Poyser\Documents\webapp\JavaClassGenerator\JavaClassGenerator\obj\Debug\JavaClassGenerator.exe
+C:\Users\Poyser\Documents\webapp\JavaClassGenerator\JavaClassGenerator\obj\Debug\JavaClassGenerator.pdb
