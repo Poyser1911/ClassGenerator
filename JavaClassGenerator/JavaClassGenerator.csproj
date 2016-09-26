@@ -106,6 +106,9 @@
   <ItemGroup>
     <Resource Include="Resources\icon_db_002-512x512.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Custom-Icon-Design-Flatastic-1-Copy.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

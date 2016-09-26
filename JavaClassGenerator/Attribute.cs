@@ -25,7 +25,7 @@ namespace JavaClassGenerator
         }
         public override string ToString()
         {
-            return this.accessor + " " + this.type + " " + this.name + ";\n";
+            return this.type + " " + this.name + ";\n";
         }
     }
 }

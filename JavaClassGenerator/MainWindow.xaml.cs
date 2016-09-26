@@ -24,67 +24,51 @@ namespace JavaClassGenerator
         public MainWindow()
         {
             InitializeComponent();
+            InitEvents();
+            Update();
         }
-        private void exit_Click(object sender, RoutedEventArgs e)
+        public void InitEvents()
         {
-            System.Diagnostics.Process.GetCurrentProcess().Kill();
-        }
-        private void titlebar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed)
-                this.DragMove();
-        }
-        private void exit_MouseEnter(object sender, MouseEventArgs e)
-        {
-            //BrushConverter b = new BrushConverter();
-            ((Label)sender).Foreground = Brushes.Gold;
-            ((Label)sender).FontSize += 1;
+            copyjavaoutput.Click += (s, e) => Clipboard.SetText(output.Text);
+            copycppoutput1.Click += (s, e) => Clipboard.SetText(output2.Text);
+            exit.MouseLeftButtonDown += (s, e) => System.Diagnostics.Process.GetCurrentProcess().Kill();
+            exit.MouseEnter += (s, e) => { ((Label)s).Foreground = Brushes.Gold; ((Label)s).FontSize += 1; };
+            exit.MouseLeave += (s, e) => { ((Label)s).Foreground = Brushes.White; ((Label)s).FontSize -= 1; };
+            classname.TextChanged += (s, e) =>  Update(); 
+            window.MouseLeftButtonDown += (s, e) => { if (e.LeftButton == MouseButtonState.Pressed) this.DragMove(); };
+            addbutton.Click += (s, e) => AddAttribute();
+            removebutton.Click += (s, e) => RemoveAttribute();
         }
 
-        private void exit_MouseLeave(object sender, MouseEventArgs e)
+        public void AddAttribute()
         {
-            ((Label)sender).Foreground = Brushes.White;
-            ((Label)sender).FontSize -= 1;
-        }
-        private void addbutton_Click(object sender, RoutedEventArgs e)
-        {
-            if (attrname.Text == "")
+            if (attrname.Text.Trim() == "" || typebox.Text.Trim() == "")
                 return;
 
-            string type =  typebox.Text;
-            attrlist.Items.Add(Helper.GetAccessorSymbol(accessorbox.SelectionBoxItem.ToString()) + " " + attrname.Text + " :" + type);
-            attributelist.Add(new Attribute().Parse(attrname.Text + " " + accessorbox.SelectionBoxItem.ToString() + " " + type + " " + defaultvalue.Text));
+            attrlist.Items.Add(Helper.GetAccessorSymbol(accessorbox.SelectionBoxItem.ToString()) + " " + attrname.Text + " :" + typebox.Text);
+            attributelist.Add(new Attribute().Parse(attrname.Text + " " + accessorbox.SelectionBoxItem.ToString() + " " + typebox.Text + " " + defaultvalue.Text));
 
             Update();
         }
 
-        private void classname_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (classname.Text == "")
-                return;
-
-            Update();
-        }
-
-        private void removebutton_Click(object sender, RoutedEventArgs e)
+        private void RemoveAttribute()
         {
             if (attrlist.SelectedIndex < 0)
                 return;
-
+            int current = attrlist.SelectedIndex;
             attributelist.RemoveAt(attrlist.SelectedIndex);
             attrlist.Items.RemoveAt(attrlist.SelectedIndex);
+
+            attrlist.SelectedIndex = current > 0 ? current - 1 : 0;
 
             Update();
         }
         public void Update()
         {
-            output.Text = Parser.Parse(classname.Text, attributelist);
+            output.Text = Parser.Java.Parse(classname.Text.Trim().Replace(" ",""), attributelist);
+            output2.Text = Parser.Cpp.Parse(classname.Text.Trim().Replace(" ", ""), attributelist);
         }
 
-        private void window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed)
-                this.DragMove();
-        }
+
     }
 }

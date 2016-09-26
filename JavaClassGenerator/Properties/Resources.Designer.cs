@@ -61,6 +61,16 @@ namespace JavaClassGenerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon Custom_Icon_Design_Flatastic_1_Copy {
+            get {
+                object obj = ResourceManager.GetObject("Custom_Icon_Design_Flatastic_1_Copy", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap icon_db_002_512x512 {
