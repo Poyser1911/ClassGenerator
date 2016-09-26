@@ -1,4 +1,4 @@
-# JavaClassGenerator
+# Java/C++ ClassGenerator
 
 
 
