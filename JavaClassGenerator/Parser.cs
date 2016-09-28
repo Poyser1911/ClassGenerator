@@ -13,55 +13,78 @@ namespace JavaClassGenerator
         {
             public static string Parse(string classname, List<Attribute> attributelist = null)
             {
+                string publicvars = string.Empty;
+                string privatevars = string.Empty;
+                string defaultinits = string.Empty;
+                string primaryconsargs = string.Empty;
+                string primaryinits = string.Empty;
+                string copyconsinits = string.Empty;
+                string printstrings = string.Empty;
+
+                List<string> getters = new List<string>();
+                List<string> setters = new List<string>();
+
+                string result = String.Empty;
+
                 //First Character should be upper
                 classname = classname == "" ? "MyClass" : classname.Substring(0, 1).ToUpper() + classname.Substring(1);
-                string result = String.Empty;
+                //Get Parts
+                if (attributelist.Count >= 0)
+                    for (int i = 0; i < attributelist.Count; i++)
+                    {
+                        if (attributelist[i].accessor == "private")
+                            privatevars += "\tprivate " + attributelist[i];
+                        else
+                            publicvars += "\tpublic " + attributelist[i];
+
+                        defaultinits += attributelist[i].DefaultInit();
+
+                        primaryconsargs += attributelist[i].AsArg();
+
+                        copyconsinits += "\t\tthis." + attributelist[i].name + " = " + classname.ToLower() + ".get" + attributelist[i].name + "();\n";
+
+                        if (attributelist[i].isStatic)
+                        {
+                            setters.Add("\n\tpublic static void set" + attributelist[i].name + "(" + attributelist[i].type + " " + attributelist[i].name + "){\n\t\tthis." + attributelist[i].name + " = " + attributelist[i].name + ";\n\t}\n");
+                            getters.Add("\n\tpublic static " + attributelist[i].type + " get" + attributelist[i].name + "(){\n\t\treturn this." + attributelist[i].name + ";\n\t}\n");
+                        }
+                        else
+                        {
+                            getters.Add("\n\tpublic " + attributelist[i].type + " get" + attributelist[i].name + "(){\n\t\treturn this." + attributelist[i].name + ";\n\t}\n");
+                            setters.Add("\n\tpublic void set" + attributelist[i].name + "(" + attributelist[i].type + " " + attributelist[i].name + "){\n\t\tthis." + attributelist[i].name + " = " + attributelist[i].name + ";\n\t}\n");
+                        }
+
+                        if (attributelist[i].defaultval.Contains("new"))
+                            printstrings += "\t\tSystem.out.println(\"" + attributelist[i].name + ": \"+" + attributelist[i].name + ".toString());\n";
+                        else
+                        printstrings += "\t\tSystem.out.println(\"" + attributelist[i].name + ": \"+" + attributelist[i].name + ");\n";
+
+                        primaryinits += "\t\tthis." + attributelist[i].name + " = " + attributelist[i].name + ";\n";
+
+                    }
+
                 //Class Header 
                 result = "public class " + classname + "{\n";
 
                 //Attributes
-                foreach (Attribute Attribute in attributelist)
-                    result += "\t" + Attribute.accessor + " " + Attribute;
+                result += privatevars + publicvars;
 
                 //Default Constructor
                 result += "\n\tpublic " + classname + "(){\n";
-                foreach (Attribute Attribute in attributelist)
-                    result += "\t\t" + Attribute.name + " = " + Attribute.defaultval + ";\n";
-
-                result += "\t}\n";
+                result += Helper.RemoveLast(defaultinits, attributelist.Count);
+                result += "\n\t}\n";
 
                 //Primary Constructor
                 result += "\n\tpublic " + classname + "(";
-
-
-                foreach (Attribute Attribute in attributelist)
-                    result += Attribute.type + " " + Attribute.name + ",";
-
-                if (attributelist.Count != 0)
-                    result = result.Substring(0, result.Length - 1);
-
+                result += Helper.RemoveLast(primaryconsargs, attributelist.Count);
                 result += "){\n";
-                foreach (Attribute Attribute in attributelist)
-                    result += "\t\tthis." + Attribute.name + " = " + Attribute.name + ";\n";
+                result += primaryinits;
                 result += "\t}\n";
 
                 //Copy Constructor
                 result += "\n\tpublic " + classname + "(" + classname + " " + classname.ToLower() + "){\n";
-
-                if (attributelist.Count != 0)
-                    foreach (Attribute Attribute in attributelist)
-                        result += "\t\tthis." + Attribute.name + " = " + classname.ToLower() + ".get" + Attribute.name + "();\n";
-
+                result += Helper.RemoveLast(copyconsinits, attributelist.Count);
                 result += "\n\t}";
-                List<string> getters = new List<string>();
-                List<string> setters = new List<string>();
-                //Getters
-                foreach (Attribute Attribute in attributelist)
-                    getters.Add("\n\tpublic " + Attribute.type + " get" + Attribute.name + "(){\n\t\treturn this." + Attribute.name + ";\n\t}\n");
-
-                //Setters
-                foreach (Attribute Attribute in attributelist)
-                    setters.Add("\n\tpublic void set" + Attribute.name + "(" + Attribute.type + " " + Attribute.name + "){\n\t\tthis." + Attribute.name + " = " + Attribute.name + ";\n\t}\n");
 
                 //Store them Alternating(getter below setter)
                 for (int i = 0; i < attributelist.Count; i++)
@@ -70,10 +93,8 @@ namespace JavaClassGenerator
 
                 //Display
                 result += "\n\tpublic void display(){\n";
-                foreach (Attribute Attribute in attributelist)
-                    result += "\t\tSystem.out.println(\"" + Attribute.name + ": \"+" + Attribute.name + ");\n";
-
-                return result += "\t}\n}";
+                result += Helper.RemoveLast(printstrings, attributelist.Count);
+                return result += "\n\t}\n}";
 
             }
         }
@@ -84,80 +105,102 @@ namespace JavaClassGenerator
         {
             public static string Parse(string classname, List<Attribute> attributelist = null)
             {
-                //Change of abstract type String to string for C++
-                for (int i = 0; i < attributelist.Count; i++)
-                {
-                    if (attributelist[i].type == "String")
-                        attributelist[i].type = "string";
+                string publicvars = string.Empty;
+                string privatevars = string.Empty;
+                string protectedvars = string.Empty;
+                string defaultinit = string.Empty;
+                string primaryconsargs = string.Empty;
+                string primaryinits = string.Empty;
+                string copyconsinits = string.Empty;
+                string printstrings = string.Empty;
 
-                    if (attributelist[i].type == "boolean")
-                        attributelist[i].type = "bool";
-                }
+                List<string> getters = new List<string>();
+                List<string> setters = new List<string>();
+
+                string result = String.Empty;
+
 
                 //First Character should be upper
                 classname = classname == "" ? "MyClass" : classname.Substring(0, 1).ToUpper() + classname.Substring(1);
-                string result = String.Empty;
+
+                //Get Parts
+                if (attributelist.Count >= 0)
+                    for (int i = 0; i < attributelist.Count; i++)
+                    {
+                        if (attributelist[i].type == "String")
+                            attributelist[i].type = "string";
+
+                        if (attributelist[i].type == "boolean")
+                            attributelist[i].type = "bool";
+                        if (attributelist[i].defaultval.Contains("new"))
+                            defaultinit += "\t\t"+attributelist[i].type + " " + attributelist[i].name + "();\n";
+                        else
+                            defaultinit += attributelist[i].DefaultInit();
+
+                        if (attributelist[i].accessor == "private")
+                            privatevars += "\t" + attributelist[i];
+                        else if (attributelist[i].accessor == "public")
+                            publicvars += "\t" + attributelist[i];
+                        else
+                            protectedvars += "\t" + attributelist[i];
+
+
+                        primaryconsargs += attributelist[i].AsArg();
+
+                        copyconsinits += "\t\tthis->" + attributelist[i].name + " = " + classname.ToLower() + "->Get" + attributelist[i].name + "();\n";
+                        if (attributelist[i].isStatic)
+                        {
+                            getters.Add("\n\tstatic " + attributelist[i].type + " Get" + attributelist[i].name + "()\n\t{\n\t\treturn this->" + attributelist[i].name + ";\n\t}\n");
+                            setters.Add("\n\tstatic void Set" + attributelist[i].name + "(" + attributelist[i].type + " " + attributelist[i].name + ")\n\t{\n\t\tthis->" + attributelist[i].name + " = " + attributelist[i].name + ";\n\t}\n");
+                        }
+                        else
+                        {
+                            getters.Add("\n\t" + attributelist[i].type + " Get" + attributelist[i].name + "()\n\t{\n\t\treturn this->" + attributelist[i].name + ";\n\t}\n");
+                            setters.Add("\n\tvoid Set" + attributelist[i].name + "(" + attributelist[i].type + " " + attributelist[i].name + ")\n\t{\n\t\tthis->" + attributelist[i].name + " = " + attributelist[i].name + ";\n\t}\n");
+                        }
+                        if (attributelist[i].defaultval.Contains("new"))
+                            printstrings += "\t\tcout << \"" + attributelist[i].name + ": \" << " + attributelist[i].name + ".ToString() << endl;\n";
+                        else
+                        printstrings += "\t\tcout << \"" + attributelist[i].name + ": \" << " + attributelist[i].name + " << endl;\n";
+
+                        primaryinits += "\t\tthis->" + attributelist[i].name + " = " + attributelist[i].name + ";\n";
+
+                    }
+
+
                 //Class Header 
-                result = "class " + classname + "\n\t{\n";
+                result = "class " + classname + "\n{";
 
                 //Private vars
                 result += "\n\tprivate:\n";
+                result += privatevars;
 
-                //Attributes
-                foreach (Attribute Attribute in attributelist)
-                    result += "\t" + Attribute;
+                //Protected vars
+                result += "\n\tprotected:\n";
+                result += protectedvars;
 
                 //Public vars
                 result += "\n\tpublic:\n";
+                result += publicvars;
+
 
                 //Default Constructor
                 result += "\t" + classname + "()\n\t{\n";
-                foreach (Attribute Attribute in attributelist)
-                    result += "\t\t" + Attribute.name + " = " + Attribute.defaultval + ";\n";
-
-                if (attributelist.Count != 0)
-                    result = result.Substring(0, result.Length - 1);
+                result += Helper.RemoveLast(defaultinit, attributelist.Count);
                 result += "\n\t}\n";
 
                 //Primary Constructor
                 result += "\n\t" + classname + "(";
-
-
-                foreach (Attribute Attribute in attributelist)
-                    result += Attribute.type + " " + Attribute.name + ",";
-
-                if (attributelist.Count != 0)
-                    result = result.Substring(0, result.Length - 1);
-
+                result += Helper.RemoveLast(primaryconsargs, attributelist.Count);
                 result += ")\n\t{\n";
-                foreach (Attribute Attribute in attributelist)
-                    result += "\t\tthis->" + Attribute.name + " = " + Attribute.name + ";\n";
-
-                if (attributelist.Count != 0)
-                    result = result.Substring(0, result.Length - 1);
+                result += Helper.RemoveLast(primaryinits, attributelist.Count);
                 result += "\n\t}\n";
 
-                
+
                 //Copy Constructor
                 result += "\n\t" + classname + "(" + classname + "  &" + classname.ToLower() + ")\n\t{\n";
-
-                if (attributelist.Count != 0)
-                    foreach (Attribute Attribute in attributelist)
-                        result += "\t\tthis->" + Attribute.name + " = " + classname.ToLower() + ".Get" + Attribute.name + "();\n";
-
-                if (attributelist.Count != 0)
-                    result = result.Substring(0, result.Length - 1);
-
+                result += Helper.RemoveLast(copyconsinits, attributelist.Count);
                 result += "\n\t}";
-                List<string> getters = new List<string>();
-                List<string> setters = new List<string>();
-                //Getters
-                foreach (Attribute Attribute in attributelist)
-                    getters.Add("\n\t" + Attribute.type + " Get" + Attribute.name + "()\n\t{\n\t\treturn this->" + Attribute.name + ";\n\t}\n");
-
-                //Setters
-                foreach (Attribute Attribute in attributelist)
-                    setters.Add("\n\tvoid Set" + Attribute.name + "(" + Attribute.type + " " + Attribute.name + ")\n\t{\n\t\tthis->" + Attribute.name + " = " + Attribute.name + ";\n\t}\n");
 
                 //Store them Alternating(getter below setter)
                 for (int i = 0; i < attributelist.Count; i++)
@@ -166,12 +209,7 @@ namespace JavaClassGenerator
 
                 //Display
                 result += "\n\tvoid Display()\n\t{\n";
-                foreach (Attribute Attribute in attributelist)
-                    result += "\t\tcout << \"" + Attribute.name + ": \" << " + Attribute.name + " << endl;\n";
-
-                if (attributelist.Count != 0)
-                    result = result.Substring(0, result.Length - 1);
-
+                result += Helper.RemoveLast(printstrings, attributelist.Count);
                 return result += "\n\t}\n};";
 
             }

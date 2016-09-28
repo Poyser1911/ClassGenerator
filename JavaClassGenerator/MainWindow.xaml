@@ -3,9 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MainWindow" Height="548.5" Width="975.5" FontSize="15" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" WindowStyle="None">
     <Grid>
-        <TextBox x:Name="classname" HorizontalAlignment="Right" Height="23" Margin="0,55,591,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="258"/>
-        <Label Content="ClassName" HorizontalAlignment="Left" Height="30" Margin="10,48,0,0" VerticalAlignment="Top" Width="112"/>
-        <Label Content="Add Attribute" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Height="30" Margin="0,83,0,0" VerticalAlignment="Top" Width="385" RenderTransformOrigin="1.192,0.567" FontStyle="Italic"/>
+        <TextBox x:Name="classname" HorizontalAlignment="Right" Height="22" Margin="0,54,589,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="258"/>
+        <Label Content="ClassName" HorizontalAlignment="Left" Height="30" Margin="12,46,0,0" VerticalAlignment="Top" Width="112"/>
+        <Label Content="Add Attribute" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Height="30" Margin="-556,111,0,0" VerticalAlignment="Top" Width="384" RenderTransformOrigin="1.192,0.567" FontStyle="Italic"/>
         <TextBox x:Name="attrname" HorizontalAlignment="Left" Height="23" Margin="127,118,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="253"/>
         <Label Content="AttributeName" HorizontalAlignment="Left" Height="30" Margin="10,113,0,0" VerticalAlignment="Top" Width="112" RenderTransformOrigin="0.464,0.567"/>
         <ListBox x:Name="attrlist" HorizontalAlignment="Left" Height="150" Margin="5,388,0,0" VerticalAlignment="Top" Width="380"/>
@@ -21,7 +21,7 @@
             <ComboBoxItem Content="String"/>
             <ComboBoxItem Content="double"/>
             <ComboBoxItem Content="boolean"/>
-            <ComboBoxItem Content="double"/>
+            <ComboBoxItem Content="char"/>
         </ComboBox>
         <Button x:Name="addbutton" Content="Add" HorizontalAlignment="Left" Height="29" Margin="249,317,0,0" VerticalAlignment="Top" Width="136">
             <Button.Background>
@@ -41,7 +41,7 @@
         <TabControl HorizontalAlignment="Left" Height="515" Margin="392,33,0,0" VerticalAlignment="Top" Width="584" Background="{x:Null}" BorderBrush="{x:Null}">
             <TabItem x:Name="javaout" Header="Java" Margin="1,-2,-142,-3" Width="auto" Background="Black" BorderBrush="{x:Null}">
                 <Grid>
-                    <TextBox x:Name="output" HorizontalAlignment="Left" Height="483" TextWrapping="Wrap" VerticalAlignment="Top" Width="578" Background="{x:Null}" BorderBrush="{x:Null}" VerticalScrollBarVisibility="Visible" Margin="0,0,0,-2">
+                    <TextBox x:Name="output" IsReadOnly="True" HorizontalAlignment="Left" Height="483" TextWrapping="Wrap" VerticalAlignment="Top" Width="578" Background="{x:Null}" BorderBrush="{x:Null}" VerticalScrollBarVisibility="Visible" Margin="0,0,0,-2">
                         <TextBox.ContextMenu>
                             <ContextMenu>
                                 <MenuItem x:Name="copyjavaoutput" Header="Copy All">
@@ -56,7 +56,7 @@
             </TabItem>
             <TabItem x:Name="cppout" Header="C++" Margin="144,-2,-306,-3" Width="auto" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="Black">
                 <Grid>
-                    <TextBox x:Name="output2" HorizontalAlignment="Left" Height="483" TextWrapping="Wrap" VerticalAlignment="Top" Width="578" Background="{x:Null}" BorderBrush="{x:Null}" Margin="0,0,0,-2" VerticalScrollBarVisibility="Visible">
+                    <TextBox x:Name="output2" IsReadOnly="True" HorizontalAlignment="Left" Height="483" TextWrapping="Wrap" VerticalAlignment="Top" Width="578" Background="{x:Null}" BorderBrush="{x:Null}" Margin="0,0,0,-2" VerticalScrollBarVisibility="Visible">
                         <TextBox.ContextMenu>
                             <ContextMenu>
                                 <MenuItem x:Name="copycppoutput1" Header="Copy All">
@@ -70,7 +70,7 @@
                 </Grid>
             </TabItem>
         </TabControl>
-        <CheckBox Content="static" HorizontalAlignment="Left" VerticalContentAlignment="Center" Height="33" Margin="303,279,0,0" VerticalAlignment="Top" Width="82"/>
+        <CheckBox x:Name="staticbox" Content="static" HorizontalAlignment="Left" VerticalContentAlignment="Center" Height="33" Margin="303,279,0,0" VerticalAlignment="Top" Width="82"/>
         <Label Content="Attribute List" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Height="30" Margin="5,358,0,0" VerticalAlignment="Top" Width="385" RenderTransformOrigin="1.192,0.567" FontStyle="Italic"/>
     </Grid>
 

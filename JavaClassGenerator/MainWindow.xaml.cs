@@ -34,7 +34,7 @@ namespace JavaClassGenerator
             exit.MouseLeftButtonDown += (s, e) => System.Diagnostics.Process.GetCurrentProcess().Kill();
             exit.MouseEnter += (s, e) => { ((Label)s).Foreground = Brushes.Gold; ((Label)s).FontSize += 1; };
             exit.MouseLeave += (s, e) => { ((Label)s).Foreground = Brushes.White; ((Label)s).FontSize -= 1; };
-            classname.TextChanged += (s, e) =>  Update(); 
+            classname.TextChanged += (s, e) => Update();
             window.MouseLeftButtonDown += (s, e) => { if (e.LeftButton == MouseButtonState.Pressed) this.DragMove(); };
             addbutton.Click += (s, e) => AddAttribute();
             removebutton.Click += (s, e) => RemoveAttribute();
@@ -44,9 +44,15 @@ namespace JavaClassGenerator
         {
             if (attrname.Text.Trim() == "" || typebox.Text.Trim() == "")
                 return;
+            foreach (Attribute a in attributelist)
+                if (a.name == attrname.Text)
+                {
+                    MessageBox.Show("Duplicate attribute name: " + attrname.Text,"Error",MessageBoxButton.OK,MessageBoxImage.Warning);
+                    return;
+                }
 
             attrlist.Items.Add(Helper.GetAccessorSymbol(accessorbox.SelectionBoxItem.ToString()) + " " + attrname.Text + " :" + typebox.Text);
-            attributelist.Add(new Attribute().Parse(attrname.Text + " " + accessorbox.SelectionBoxItem.ToString() + " " + typebox.Text + " " + defaultvalue.Text));
+            attributelist.Add(new Attribute().Parse(attrname.Text + " " + accessorbox.SelectionBoxItem.ToString() + " " + typebox.Text + " " + staticbox.IsChecked.ToString() + " " + defaultvalue.Text));
 
             Update();
         }
@@ -65,7 +71,7 @@ namespace JavaClassGenerator
         }
         public void Update()
         {
-            output.Text = Parser.Java.Parse(classname.Text.Trim().Replace(" ",""), attributelist);
+            output.Text = Parser.Java.Parse(classname.Text.Trim().Replace(" ", ""), attributelist);
             output2.Text = Parser.Cpp.Parse(classname.Text.Trim().Replace(" ", ""), attributelist);
         }
 
